@@ -1,0 +1,9 @@
+case,before_s1,after_boundary_scaled,after_tier,centerline_comparator
+Straight road,0.33013,0.00557,Gentle,0.0
+Gentle curve,0.34386,0.00595,Gentle,0.00176
+Moderate curve,0.35912,0.00621,Gentle,0.00258
+Sharp curve,0.36787,0.00567,Gentle,0.00198
+Sharp + median hole,0.36787,0.00567,Gentle,0.00259
+Sharp + side branch,0.36787,0.00567,Gentle,0.00313
+Circle R=180 (Gentle),0.52138,0.00557,Gentle,0.0
+Circle R=55 (Moderate),0.42484,0.01851,Moderate,0.0

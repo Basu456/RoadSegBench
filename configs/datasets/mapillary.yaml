@@ -1,0 +1,5 @@
+dataset: mapillary
+root: /content/drive/MyDrive/datasets/mapillary
+# Replace with exact label export convention and verified road class ID(s).
+road_ids: [REPLACE_WITH_VERIFIED_ROAD_ID]
+channel: null

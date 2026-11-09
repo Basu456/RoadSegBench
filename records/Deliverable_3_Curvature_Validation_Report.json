@@ -1,0 +1,192 @@
+{
+  "circle_theoretical_validation": [
+    {
+      "radius_px": 30,
+      "theoretical_kappa": 0.033333,
+      "expected_tier": "Sharp",
+      "before_s1_kappa": 0.358039,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 974.12,
+      "after_scaled_kappa": 0.034812,
+      "after_scaled_tier": "Sharp",
+      "after_rel_error_pct": 4.43
+    },
+    {
+      "radius_px": 45,
+      "theoretical_kappa": 0.022222,
+      "expected_tier": "Moderate",
+      "before_s1_kappa": 0.4003,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 1701.35,
+      "after_scaled_kappa": 0.022735,
+      "after_scaled_tier": "Moderate",
+      "after_rel_error_pct": 2.31
+    },
+    {
+      "radius_px": 60,
+      "theoretical_kappa": 0.016667,
+      "expected_tier": "Moderate",
+      "before_s1_kappa": 0.388869,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 2233.21,
+      "after_scaled_kappa": 0.016923,
+      "after_scaled_tier": "Moderate",
+      "after_rel_error_pct": 1.54
+    },
+    {
+      "radius_px": 90,
+      "theoretical_kappa": 0.011111,
+      "expected_tier": "Moderate",
+      "before_s1_kappa": 0.508031,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 4472.28,
+      "after_scaled_kappa": 0.011179,
+      "after_scaled_tier": "Moderate",
+      "after_rel_error_pct": 0.61
+    },
+    {
+      "radius_px": 120,
+      "theoretical_kappa": 0.008333,
+      "expected_tier": "Gentle",
+      "before_s1_kappa": 0.502701,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 5932.41,
+      "after_scaled_kappa": 0.008377,
+      "after_scaled_tier": "Gentle",
+      "after_rel_error_pct": 0.52
+    },
+    {
+      "radius_px": 180,
+      "theoretical_kappa": 0.005556,
+      "expected_tier": "Gentle",
+      "before_s1_kappa": 0.521385,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 9284.92,
+      "after_scaled_kappa": 0.005572,
+      "after_scaled_tier": "Gentle",
+      "after_rel_error_pct": 0.3
+    },
+    {
+      "radius_px": 240,
+      "theoretical_kappa": 0.004167,
+      "expected_tier": "Gentle",
+      "before_s1_kappa": 0.473268,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 11258.42,
+      "after_scaled_kappa": 0.004178,
+      "after_scaled_tier": "Gentle",
+      "after_rel_error_pct": 0.27
+    },
+    {
+      "radius_px": 360,
+      "theoretical_kappa": 0.002778,
+      "expected_tier": "Gentle",
+      "before_s1_kappa": 0.395089,
+      "before_s1_tier": "Sharp",
+      "before_rel_error_pct": 14123.19,
+      "after_scaled_kappa": 0.002782,
+      "after_scaled_tier": "Gentle",
+      "after_rel_error_pct": 0.16
+    }
+  ],
+  "resampling_sensitivity": [
+    {
+      "shape": "circle_r120",
+      "n_125": 0.008376,
+      "n_250": 0.008377,
+      "n_500": 0.008377,
+      "n_1000": 0.008376,
+      "n_2000": 0.008376,
+      "max_abs_diff_vs_n500": 1e-06,
+      "cv_pct": 0.0058
+    },
+    {
+      "shape": "corridor_gentle",
+      "n_125": 0.005908,
+      "n_250": 0.005529,
+      "n_500": 0.005516,
+      "n_1000": 0.005519,
+      "n_2000": 0.005521,
+      "max_abs_diff_vs_n500": 0.000392,
+      "cv_pct": 2.7643
+    },
+    {
+      "shape": "corridor_moderate",
+      "n_125": 0.006579,
+      "n_250": 0.006455,
+      "n_500": 0.006426,
+      "n_1000": 0.006441,
+      "n_2000": 0.00644,
+      "max_abs_diff_vs_n500": 0.000153,
+      "cv_pct": 0.8682
+    },
+    {
+      "shape": "corridor_sharp",
+      "n_125": 0.004838,
+      "n_250": 0.005702,
+      "n_500": 0.005763,
+      "n_1000": 0.005789,
+      "n_2000": 0.005793,
+      "max_abs_diff_vs_n500": 0.000925,
+      "cv_pct": 6.6511
+    }
+  ],
+  "controlled_road_and_edge_cases": [
+    {
+      "case": "Straight road",
+      "before_s1": 0.33013,
+      "after_boundary_scaled": 0.00557,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.0
+    },
+    {
+      "case": "Gentle curve",
+      "before_s1": 0.34386,
+      "after_boundary_scaled": 0.00595,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.00176
+    },
+    {
+      "case": "Moderate curve",
+      "before_s1": 0.35912,
+      "after_boundary_scaled": 0.00621,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.00258
+    },
+    {
+      "case": "Sharp curve",
+      "before_s1": 0.36787,
+      "after_boundary_scaled": 0.00567,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.00198
+    },
+    {
+      "case": "Sharp + median hole",
+      "before_s1": 0.36787,
+      "after_boundary_scaled": 0.00567,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.00259
+    },
+    {
+      "case": "Sharp + side branch",
+      "before_s1": 0.36787,
+      "after_boundary_scaled": 0.00567,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.00313
+    },
+    {
+      "case": "Circle R=180 (Gentle)",
+      "before_s1": 0.52138,
+      "after_boundary_scaled": 0.00557,
+      "after_tier": "Gentle",
+      "centerline_comparator": 0.0
+    },
+    {
+      "case": "Circle R=55 (Moderate)",
+      "before_s1": 0.42484,
+      "after_boundary_scaled": 0.01851,
+      "after_tier": "Moderate",
+      "centerline_comparator": 0.0
+    }
+  ]
+}

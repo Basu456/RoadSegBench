@@ -1,0 +1,12 @@
+# These names must match the exact variant used in the manuscript.
+# Native generic baselines are not substitutes for PIDNet/DDRNet/BiSeNetV2/SCTNet.
+architectures:
+  unet: {encoder: resnet34, encoder_weights: imagenet}
+  deeplabv3plus: {encoder: resnet50, encoder_weights: imagenet}
+  segformer: {checkpoint: nvidia/mit-b2}
+  fpn: {encoder: resnet34, encoder_weights: imagenet}
+  pspnet: {encoder: resnet34, encoder_weights: imagenet}
+  pidnet: {adapter: REQUIRED_PINNED_UPSTREAM}
+  ddrnet: {adapter: REQUIRED_PINNED_UPSTREAM}
+  bisenetv2: {adapter: REQUIRED_PINNED_UPSTREAM}
+  sctnet: {adapter: REQUIRED_PINNED_UPSTREAM}

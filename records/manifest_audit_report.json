@@ -1,0 +1,423 @@
+{
+  "manifest_path": "<REPO>\\data\\manifests\\roadsegbench_manifest_with_curvature.csv",
+  "manifest_sha256": "53cbcd94881654cfe329519454d98510318742ab9113b0f0b27d0548210a6b11",
+  "n_images": 31475,
+  "missing_files_count": 0,
+  "dataset_roots": {
+    "cityscapes": "<WORKSPACE>\\datasets\\cityscapes",
+    "bdd100k": "<WORKSPACE>\\datasets\\bdd100k\\bdd100k_seg\\bdd100k\\seg",
+    "mapillary": "<WORKSPACE>\\datasets\\mapillary_vistas\\Mapillary Vistas"
+  },
+  "counts_by_dataset_split_partition": [
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "threshold_validation",
+      "count": 150
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "train",
+      "count": 6150
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "tuning",
+      "count": 700
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "val",
+      "partition": "evaluation",
+      "count": 1000
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "threshold_validation",
+      "count": 100
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "train",
+      "count": 2600
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "tuning",
+      "count": 275
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "val",
+      "partition": "evaluation",
+      "count": 500
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "threshold_validation",
+      "count": 150
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "train",
+      "count": 16050
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "tuning",
+      "count": 1800
+    },
+    {
+      "dataset": "mapillary",
+      "split": "val",
+      "partition": "evaluation",
+      "count": 2000
+    }
+  ],
+  "image_id_partition_overlap": [
+    {
+      "partition_a": "evaluation",
+      "partition_b": "threshold_validation",
+      "overlap_count": 0,
+      "examples": []
+    },
+    {
+      "partition_a": "evaluation",
+      "partition_b": "train",
+      "overlap_count": 0,
+      "examples": []
+    },
+    {
+      "partition_a": "evaluation",
+      "partition_b": "tuning",
+      "overlap_count": 0,
+      "examples": []
+    },
+    {
+      "partition_a": "threshold_validation",
+      "partition_b": "train",
+      "overlap_count": 0,
+      "examples": []
+    },
+    {
+      "partition_a": "threshold_validation",
+      "partition_b": "tuning",
+      "overlap_count": 0,
+      "examples": []
+    },
+    {
+      "partition_a": "train",
+      "partition_b": "tuning",
+      "overlap_count": 0,
+      "examples": []
+    }
+  ],
+  "scene_id_partition_overlap": [
+    {
+      "partition_a": "evaluation",
+      "partition_b": "threshold_validation",
+      "scene_overlap_count": 0
+    },
+    {
+      "partition_a": "evaluation",
+      "partition_b": "train",
+      "scene_overlap_count": 0
+    },
+    {
+      "partition_a": "evaluation",
+      "partition_b": "tuning",
+      "scene_overlap_count": 0
+    },
+    {
+      "partition_a": "threshold_validation",
+      "partition_b": "train",
+      "scene_overlap_count": 0
+    },
+    {
+      "partition_a": "threshold_validation",
+      "partition_b": "tuning",
+      "scene_overlap_count": 0
+    },
+    {
+      "partition_a": "train",
+      "partition_b": "tuning",
+      "scene_overlap_count": 0
+    }
+  ],
+  "tier_counts_all_partitions": [
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Gentle",
+      "count": 57
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Moderate",
+      "count": 54
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Sharp",
+      "count": 39
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "train",
+      "curvature_tier": "Moderate",
+      "count": 6150
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Gentle",
+      "count": 241
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Moderate",
+      "count": 260
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Sharp",
+      "count": 199
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Gentle",
+      "count": 348
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Moderate",
+      "count": 427
+    },
+    {
+      "dataset": "bdd100k",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Sharp",
+      "count": 225
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Gentle",
+      "count": 26
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Moderate",
+      "count": 50
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Sharp",
+      "count": 24
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "train",
+      "curvature_tier": "Gentle",
+      "count": 897
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "train",
+      "curvature_tier": "Moderate",
+      "count": 1287
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "train",
+      "curvature_tier": "Sharp",
+      "count": 416
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Gentle",
+      "count": 100
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Moderate",
+      "count": 136
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Sharp",
+      "count": 39
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Gentle",
+      "count": 149
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Moderate",
+      "count": 243
+    },
+    {
+      "dataset": "cityscapes",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Sharp",
+      "count": 108
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Gentle",
+      "count": 95
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Moderate",
+      "count": 38
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "threshold_validation",
+      "curvature_tier": "Sharp",
+      "count": 17
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "train",
+      "curvature_tier": "Gentle",
+      "count": 16050
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Gentle",
+      "count": 1142
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Moderate",
+      "count": 467
+    },
+    {
+      "dataset": "mapillary",
+      "split": "train",
+      "partition": "tuning",
+      "curvature_tier": "Sharp",
+      "count": 191
+    },
+    {
+      "dataset": "mapillary",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Gentle",
+      "count": 1299
+    },
+    {
+      "dataset": "mapillary",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Moderate",
+      "count": 526
+    },
+    {
+      "dataset": "mapillary",
+      "split": "val",
+      "partition": "evaluation",
+      "curvature_tier": "Sharp",
+      "count": 175
+    }
+  ],
+  "evaluation_3500_by_dataset_empirical_tiers": {
+    "cityscapes": {
+      "Gentle": 149,
+      "Moderate": 243,
+      "Sharp": 108
+    },
+    "bdd100k": {
+      "Gentle": 348,
+      "Moderate": 427,
+      "Sharp": 225
+    },
+    "mapillary": {
+      "Gentle": 1299,
+      "Moderate": 526,
+      "Sharp": 175
+    }
+  },
+  "evaluation_3500_by_dataset_fixed_001_003_tiers": {
+    "cityscapes": {
+      "Gentle": 17,
+      "Moderate": 352,
+      "Sharp": 131
+    },
+    "bdd100k": {
+      "Gentle": 308,
+      "Moderate": 669,
+      "Sharp": 23
+    },
+    "mapillary": {
+      "Gentle": 883,
+      "Moderate": 1041,
+      "Sharp": 76
+    }
+  },
+  "empirical_3500_canonical_thresholds": {
+    "gentle_upper": 0.013447,
+    "moderate_upper": 0.022563
+  },
+  "standardized_thresholds": {
+    "gentle_upper": 0.01,
+    "moderate_upper": 0.03
+  }
+}

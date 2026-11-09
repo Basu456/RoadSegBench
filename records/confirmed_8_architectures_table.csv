@@ -1,0 +1,10 @@
+group,architecture,variant,params_M,initial_lr,mean_ms_fp32,median_ms_fp32,p95_ms_fp32,fps_b1_fp32,peak_vram_mib_b1,upstream_source,upstream_commit,pretrained_sha256,matched_backbone_tensors
+1_Primary,unet,resnet34,24.436,0.001,16.15,15.79,18.28,61.9,292.3,segmentation_models_pytorch==0.6.0,release,cached,all
+2_Primary,deeplabv3plus,resnet101,45.67,0.001,25.98,24.93,30.7,38.5,434.7,segmentation_models_pytorch==0.6.0,release,cached,all
+3_Primary,bisenetv2,bisenetv2,3.34,0.001,10.3,9.65,14.16,97.1,177.9,https://github.com/CoinCheung/BiSeNet,08e0726f42094ef8f0af08d340ee73bf338d54a5,c63b0eb92c850323,319
+4_Primary,ddrnet,ddrnet_23,20.147,0.001,10.95,9.61,16.53,91.3,147.9,https://github.com/ydhongHIT/DDRNet,de0db317c5af4b0946231f475cf74ca4f51b8ac2,571959df93dce2db,254
+5_Primary,pidnet,pidnet-m,28.536,0.001,15.44,13.52,22.54,64.8,179.1,https://github.com/XuJiacong/PIDNet,4c158cf24ce432f0a8cb43364fae38d93cee0dc3,39893c522e7b15e6,266
+6_Primary,segformer,nvidia/mit-b2,27.348,6e-05,41.44,41.04,44.77,24.1,1000.0,transformers==5.20.2,release,cached,all
+7a_Extended,sctnet,sctnet-b,17.433,0.001,11.14,9.81,16.87,89.8,146.2,https://github.com/xzz777/SCTNet,d4bd6d8073a59831d69f303fc5b39c70023e2719,c56bc9a005270a96,244
+7b_Extended,sctnet,sctnet-s,4.652,0.001,12.28,10.96,17.27,81.4,76.2,https://github.com/xzz777/SCTNet,d4bd6d8073a59831d69f303fc5b39c70023e2719,6711235bef62dedb,244
+8_Extended,ddrnet_br,ddrnet_23_br,20.442,0.001,11.7,10.13,17.07,85.5,159.0,https://github.com/ydhongHIT/DDRNet,de0db317c5af4b0946231f475cf74ca4f51b8ac2,571959df93dce2db,254

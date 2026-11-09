@@ -1,0 +1,27 @@
+{
+  "train_images": 18000,
+  "train_labels_v1_2": 18000,
+  "val_images": 2000,
+  "missing_val_images": 0,
+  "verified_road_ids_v1_2": [
+    13
+  ],
+  "verified_road_ids_v2_0": [
+    21
+  ],
+  "v12_vs_v20_mismatches_in_30": 14,
+  "v12_vs_instances_mismatches_in_30": 0,
+  "empty_road_masks_val": 31,
+  "valid_contour_masks_val": 1969,
+  "road_prop_mean_val": 0.1891,
+  "tiers_default_s1_on_25_samples": {
+    "Gentle": 0,
+    "Moderate": 0,
+    "Sharp": 23
+  },
+  "tiers_scaled_0.01_0.03": {
+    "Gentle": 852,
+    "Moderate": 1041,
+    "Sharp": 76
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "seed": 11,
+  "device": "NVIDIA RTX A4000",
+  "dataloader_smoke_checks": {
+    "cityscapes": {
+      "train_subset_tested": 16,
+      "eval_subset_available": 500,
+      "image_batch_shape": [
+        4,
+        3,
+        512,
+        1024
+      ],
+      "mask_batch_shape": [
+        4,
+        1,
+        512,
+        1024
+      ],
+      "road_positive_ratio_in_batch": 0.2572,
+      "num_workers": 2,
+      "status": "PASS"
+    },
+    "bdd100k": {
+      "train_subset_tested": 16,
+      "eval_subset_available": 1000,
+      "image_batch_shape": [
+        4,
+        3,
+        512,
+        1024
+      ],
+      "mask_batch_shape": [
+        4,
+        1,
+        512,
+        1024
+      ],
+      "road_positive_ratio_in_batch": 0.1411,
+      "num_workers": 2,
+      "status": "PASS"
+    },
+    "mapillary": {
+      "train_subset_tested": 16,
+      "eval_subset_available": 2000,
+      "image_batch_shape": [
+        4,
+        3,
+        512,
+        1024
+      ],
+      "mask_batch_shape": [
+        4,
+        1,
+        512,
+        1024
+      ],
+      "road_positive_ratio_in_batch": 0.204,
+      "num_workers": 2,
+      "status": "PASS"
+    }
+  },
+  "pilot_runs": {
+    "unet": {
+      "train_seconds": 226.79,
+      "best_tuning_road_iou_pct": 80.16,
+      "eval_500_road_iou_mean_pct": 76.93,
+      "eval_500_road_iou_bootstrap_95ci_pct": [
+        75.03,
+        78.85
+      ],
+      "eval_500_dice_mean_pct": 84.45,
+      "eval_500_precision_mean_pct": 86.18,
+      "eval_500_recall_mean_pct": 85.49,
+      "eval_500_biou_unweighted_mean_pct": 8.18,
+      "weighted_biou": {
+        "tier_counts": {
+          "Gentle": 149,
+          "Moderate": 243,
+          "Sharp": 108
+        },
+        "tier_mean_road_iou_pct": {
+          "Gentle": 77.9,
+          "Moderate": 80.01,
+          "Sharp": 68.66
+        },
+        "tier_mean_biou_pct": {
+          "Gentle": 7.75,
+          "Moderate": 8.85,
+          "Sharp": 7.27
+        },
+        "weighted_biou_empirical_pct": 8.06,
+        "weighted_biou_standardized_pct": 8.03
+      },
+      "latency_rtx_a4000_fp16": {
+        "device": "cuda",
+        "backend": "pytorch",
+        "precision": "fp16",
+        "warmup": 10,
+        "iterations": 30,
+        "mean_ms": 14.832366645957032,
+        "median_ms": 14.114800025708973,
+        "p95_ms": 18.66913487901911,
+        "fps_batch1": 67.42012410221652
+      },
+      "checkpoint_path": "<REPO>\\outputs\\pilot_seed11\\cityscapes\\unet\\seed_11\\best.pt",
+      "per_image_csv": "<REPO>\\outputs\\pilot_seed11\\cityscapes\\unet\\seed_11\\eval_500\\per_image_metrics.csv"
+    },
+    "pidnet": {
+      "train_seconds": 229.37,
+      "best_tuning_road_iou_pct": 73.35,
+      "eval_500_road_iou_mean_pct": 75.17,
+      "eval_500_road_iou_bootstrap_95ci_pct": [
+        73.46,
+        76.85
+      ],
+      "eval_500_dice_mean_pct": 83.84,
+      "eval_500_precision_mean_pct": 82.1,
+      "eval_500_recall_mean_pct": 88.27,
+      "eval_500_biou_unweighted_mean_pct": 4.28,
+      "weighted_biou": {
+        "tier_counts": {
+          "Gentle": 149,
+          "Moderate": 243,
+          "Sharp": 108
+        },
+        "tier_mean_road_iou_pct": {
+          "Gentle": 75.76,
+          "Moderate": 78.28,
+          "Sharp": 67.36
+        },
+        "tier_mean_biou_pct": {
+          "Gentle": 3.89,
+          "Moderate": 4.55,
+          "Sharp": 4.22
+        },
+        "weighted_biou_empirical_pct": 4.16,
+        "weighted_biou_standardized_pct": 4.16
+      },
+      "latency_rtx_a4000_fp16": {
+        "device": "cuda",
+        "backend": "pytorch",
+        "precision": "fp16",
+        "warmup": 10,
+        "iterations": 30,
+        "mean_ms": 10.01838001733025,
+        "median_ms": 8.862100075930357,
+        "p95_ms": 13.550160021986812,
+        "fps_batch1": 99.81653703195072
+      },
+      "checkpoint_path": "<REPO>\\outputs\\pilot_seed11\\cityscapes\\pidnet\\seed_11\\best.pt",
+      "per_image_csv": "<REPO>\\outputs\\pilot_seed11\\cityscapes\\pidnet\\seed_11\\eval_500\\per_image_metrics.csv"
+    }
+  },
+  "statistical_pipeline_check_pidnet_vs_unet": [
+    {
+      "model_a": "pidnet",
+      "model_b": "unet",
+      "n_pairs": 500,
+      "mean_difference": -1.757472440147294,
+      "z_statistic": -3.0179434467397273,
+      "p_raw_normal_approx": 0.0025449639304465626,
+      "p_holm": 0.0025449639304465626,
+      "significant_holm": true
+    }
+  ],
+  "visual_predictions_grid": "<WORKSPACE>\\records\\visual_checks\\pilot_predictions_grid.png"
+}

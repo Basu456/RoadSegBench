@@ -1,0 +1,41 @@
+project: RoadSegBench
+seed_values: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
+image_size: [512, 1024]
+batch_size: 4
+epochs: 100
+learning_rate: 0.0001
+weight_decay: 0.0001
+num_workers: 2
+checkpoint_metric: validation_road_iou
+checkpoint_mode: max
+curvature:
+  method: external_largest_contour_periodic_cubic_spline
+  spline_degree: 3
+  smoothing: 1.0
+  samples: 500
+  gentle_upper: 0.010
+  moderate_upper: 0.030
+metrics:
+  primary_endpoint: road_iou
+  boundary_iou_radius_pixels: 2
+  threshold: 0.5
+datasets:
+  # Set roots in Colab; do not put private/local absolute paths in this file.
+  cityscapes: ""
+  bdd100k: ""
+  mapillary: ""
+partitions:
+  train: train
+  tuning: tuning
+  threshold_validation: threshold_validation
+  evaluation: evaluation
+training:
+  augmentation: "Document exact transforms/ranges in run metadata before execution."
+  pretrained_weights: "Record exact source and checksum."
+  architecture: "Set exact model variant in each run record."
+latency:
+  backend: pytorch
+  warmup_iterations: 50
+  measured_iterations: 200
+  precision: fp32
+  synchronize_cuda: true

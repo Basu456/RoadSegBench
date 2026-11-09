@@ -1,0 +1,6 @@
+dataset: cityscapes
+root: /content/drive/MyDrive/datasets/cityscapes
+image_dir: leftImg8bit
+mask_dir: gtFine
+label_space: train_id
+road_ids: [0]

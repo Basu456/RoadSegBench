@@ -1,0 +1,40 @@
+{
+  "train": {
+    "total_images": 2975,
+    "empty_road_masks": 10,
+    "valid_contour_masks": 2929,
+    "road_prop_mean": 0.2311,
+    "road_prop_median": 0.2328,
+    "tiers_default_s1_0.01_0.03": {
+      "Gentle": 0,
+      "Moderate": 4,
+      "Sharp": 2925
+    },
+    "tiers_scaled_0.01_0.03": {
+      "Gentle": 1,
+      "Moderate": 2100,
+      "Sharp": 828
+    },
+    "quantile_80.6_for_97_sharp_of_500": 0.05588,
+    "quantile_57.2_for_214_sharp_of_500": 0.04558
+  },
+  "val": {
+    "total_images": 500,
+    "empty_road_masks": 4,
+    "valid_contour_masks": 483,
+    "road_prop_mean": 0.2434,
+    "road_prop_median": 0.2507,
+    "tiers_default_s1_0.01_0.03": {
+      "Gentle": 0,
+      "Moderate": 1,
+      "Sharp": 482
+    },
+    "tiers_scaled_0.01_0.03": {
+      "Gentle": 0,
+      "Moderate": 352,
+      "Sharp": 131
+    },
+    "quantile_80.6_for_97_sharp_of_500": 0.03397,
+    "quantile_57.2_for_214_sharp_of_500": 0.02499
+  }
+}

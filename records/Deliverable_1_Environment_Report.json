@@ -1,0 +1,47 @@
+{
+  "paper_id": "IJIES-20267157",
+  "manuscript_title": "RoadSegBench: Reproducible Benchmarking of Curvy Road Segmentation",
+  "timestamp_utc": "2026-11-03T08:36:00Z",
+  "hardware": {
+    "cpu": "12th Gen Intel(R) Core(TM) i9-12900K (16 cores, 24 logical processors)",
+    "system_ram_gb": 63.7,
+    "gpu_name": "NVIDIA RTX A4000",
+    "gpu_vram_mib_reported_nvidia_smi": 16376,
+    "gpu_vram_gib_pytorch": 15.99,
+    "hardware_discrepancy_note": "Handoff document reported 'NVIDIA RTX A4000, 24 GB GPU memory, 64 GB system RAM'. Physical workstation verification via nvidia-smi confirms an NVIDIA RTX A4000 with 16376 MiB (16 GB) GDDR6 VRAM and 63.7 GB system RAM.",
+    "storage_free_gb": {
+      "C": 158,
+      "D": 149
+    }
+  },
+  "software": {
+    "os": "Microsoft Windows 11 Pro 10.0.26300 (WSL2 Ubuntu stopped/available)",
+    "nvidia_driver_version": "596.71",
+    "cuda_driver_version": "13.2",
+    "python_executable": "<REPO>\\.venv\\Scripts\\python.exe",
+    "python_version": "3.10.11",
+    "pytorch_version": "2.11.0+cu128",
+    "torchvision_version": "0.26.0+cu128",
+    "cuda_runtime_version": "12.8",
+    "cudnn_version": 91900,
+    "segmentation_models_pytorch_version": "0.6.0",
+    "transformers_version": "5.20.2",
+    "timm_version": "1.0.30",
+    "opencv_version": "5.0.0.93",
+    "numpy_version": "2.2.6",
+    "scipy_version": "1.15.3",
+    "pandas_version": "2.3.3",
+    "pytest_status": "5 passed in 7.74s"
+  },
+  "handoff_checksums_sha256": {
+    "RoadSegBench_IJIES_Faculty_Handoff_Bundle.zip": "058a98685bb97ded45f22ac4e58d4d28ca7b1fe6b3c68b5875530f51b8377e2b",
+    "RoadSegBench_IJIES_Faculty_Handoff.pdf": "b57319a77fdf365244a35a94581299b95cb2dd81b051c4fd7e8776ac04930d66",
+    "RoadSegBench_IJIES_Faculty_Handoff.docx": "960578f41fcef659543bda11cb342a3d51f7d14bae025fbf8eef9a4999e1804d",
+    "handoff/RoadSegBench_IJIES_Faculty_Experiment_Handoff.zip": "139a7e93d129fec33dfa158d4e8b98ca51ded1f1213ee060ec1be884733f595d",
+    "handoff/FACULTY_QUICK_START.txt": "39dcce7d5b8390971888f3564977f876ec766254c77d713e4b4ff10e4863c20f"
+  },
+  "git_commits": {
+    "pristine_import_commit": "912488d72c6af028d25d07120c8e6c199e0603fd",
+    "gitignore_only_commit": "bc19623"
+  }
+}

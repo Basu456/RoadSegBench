@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Hardware Computational Efficiency and Memory Footprint Benchmarked on NVIDIA RTX A4000 (16 GB VRAM) at Resolution $512 \times 1024$ in PyTorch (Batch Size = 1).}
+\label{tab:efficiency}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Architecture} & \textbf{Variant} & \textbf{Params (M)} & \textbf{FP32 Lat. (ms)} & \textbf{Throughput (FPS)} & \textbf{Peak VRAM (MiB)} \\
+\midrule
+BISENETV2 & bisenetv2 & 3.34 & 10.3 & 97.1 & 177.9 \\
+DDRNET & ddrnet_23 & 20.15 & 10.9 & 91.3 & 147.9 \\
+SCTNET & sctnet-b & 17.43 & 11.1 & 89.8 & 146.2 \\
+DDRNET_BR & ddrnet_23_br & 20.44 & 11.7 & 85.5 & 159.0 \\
+SCTNET & sctnet-s & 4.65 & 12.3 & 81.4 & 76.2 \\
+PIDNET & pidnet-m & 28.54 & 15.4 & 64.8 & 179.1 \\
+UNET & resnet34 & 24.44 & 16.1 & 61.9 & 292.3 \\
+DEEPLABV3PLUS & resnet101 & 45.67 & 26.0 & 38.5 & 434.7 \\
+SEGFORMER & nvidia/mit-b2 & 27.35 & 41.4 & 24.1 & 1000.0 \\
+\bottomrule
+\end{tabular}
+\end{table}

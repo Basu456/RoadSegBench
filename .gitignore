@@ -1,0 +1,44 @@
+# --- Datasets (licences forbid redistribution) ---
+data/raw/
+data/cache/
+data/cityscapes/
+data/bdd100k/
+data/mapillary*/
+/datasets/
+*.zip
+*.tar
+*.tar.gz
+
+# --- Weights / checkpoints (publish via GitHub Releases or Zenodo) ---
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.engine
+*.trt
+/pretrained/
+/checkpoints/
+
+# --- Third-party code (cloned at pinned commits, see environment/third_party_lock.csv) ---
+/third_party/
+
+# --- Experiment tracking / logs ---
+/mlruns/
+/wandb/
+/logs/
+/experiments/
+/outputs/
+
+# --- Python / OS / editors ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+kaggle.json
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

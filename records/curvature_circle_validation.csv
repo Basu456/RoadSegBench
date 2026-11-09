@@ -1,0 +1,9 @@
+radius_px,theoretical_kappa,expected_tier,before_s1_kappa,before_s1_tier,before_rel_error_pct,after_scaled_kappa,after_scaled_tier,after_rel_error_pct
+30,0.033333,Sharp,0.358039,Sharp,974.12,0.034812,Sharp,4.43
+45,0.022222,Moderate,0.4003,Sharp,1701.35,0.022735,Moderate,2.31
+60,0.016667,Moderate,0.388869,Sharp,2233.21,0.016923,Moderate,1.54
+90,0.011111,Moderate,0.508031,Sharp,4472.28,0.011179,Moderate,0.61
+120,0.008333,Gentle,0.502701,Sharp,5932.41,0.008377,Gentle,0.52
+180,0.005556,Gentle,0.521385,Sharp,9284.92,0.005572,Gentle,0.3
+240,0.004167,Gentle,0.473268,Sharp,11258.42,0.004178,Gentle,0.27
+360,0.002778,Gentle,0.395089,Sharp,14123.19,0.002782,Gentle,0.16

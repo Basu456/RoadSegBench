@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated RoadSegBench manuscript."
+title: "RoadSegBench: Reproducible Benchmarking of Curvy Road Segmentation"
+type: software
+version: 1.0.0
+license: MIT
+authors:
+  - family-names: "Chougula"
+    given-names: "Basavaraj"
+    affiliation: "Visvesvaraya Technological University, Belagavi; Jain College of Engineering and Research, Belagavi, Karnataka, India"
+  - family-names: "Gudnavar"
+    given-names: "Anand"
+    affiliation: "Department of Computer Science and Engineering (AIML), Jain College of Engineering and Research, Belagavi, India"
+  - family-names: "Naregal"
+    given-names: "Keerti"
+    affiliation: "Department of Computer Science and Engineering, Graphic Era University, Dehradun, India"
+keywords:
+  - road segmentation
+  - curvature
+  - benchmark
+  - reproducibility

@@ -1,0 +1,99 @@
+{
+  "summary": "Mathematical and empirical reconciliation of the 97-image vs 214-image Sharp road subset discrepancy. By elementary set cardinality, a 214-image set cannot be a subset of a 97-image set (child_is_subset_of_parent = False). Instead, the 97-image set is a strict subset of the 214-image set (child_is_subset_of_parent = True, intersection_count = 97, 117 additional images in the 214-image set).",
+  "case_1_within_cityscapes_val_threshold_shift": {
+    "description": "97-image Cityscapes Sharp subset (kappa_native >= 0.033971) vs 214-image Cityscapes relaxed Sharp subset (kappa_native >= 0.024991)",
+    "cutoff_97_native": 0.033309,
+    "cutoff_214_native": 0.024844,
+    "cutoff_131_fixed_003_native": 0.030181,
+    "is_214_subset_of_97": {
+      "parent": "cityscapes_sharp_97",
+      "child": "cityscapes_sharp_214",
+      "parent_count": 97,
+      "child_count": 214,
+      "intersection_count": 97,
+      "child_is_subset_of_parent": false,
+      "child_not_in_parent_count": 117,
+      "examples_not_in_parent": [
+        "cityscapes_val_val10",
+        "cityscapes_val_val100",
+        "cityscapes_val_val105",
+        "cityscapes_val_val107",
+        "cityscapes_val_val11",
+        "cityscapes_val_val124",
+        "cityscapes_val_val127",
+        "cityscapes_val_val130",
+        "cityscapes_val_val135",
+        "cityscapes_val_val136"
+      ]
+    },
+    "is_97_subset_of_214": {
+      "parent": "cityscapes_sharp_214",
+      "child": "cityscapes_sharp_97",
+      "parent_count": 214,
+      "child_count": 97,
+      "intersection_count": 97,
+      "child_is_subset_of_parent": true,
+      "child_not_in_parent_count": 0,
+      "examples_not_in_parent": []
+    }
+  },
+  "case_2_cityscapes_97_vs_multidataset_urban_sharp_214": {
+    "description": "97-image Cityscapes Sharp subset vs 214-image multi-dataset urban Sharp pool (131 Cityscapes + 76 Mapillary + 7 BDD100K at kappa >= 0.03)",
+    "composition_214": {
+      "cityscapes_sharp": 131,
+      "mapillary_sharp": 76,
+      "bdd100k_sharp_top7": 7,
+      "total": 214
+    },
+    "is_214_subset_of_97": {
+      "parent": "cityscapes_sharp_97",
+      "child": "multidataset_urban_sharp_214",
+      "parent_count": 97,
+      "child_count": 214,
+      "intersection_count": 97,
+      "child_is_subset_of_parent": false,
+      "child_not_in_parent_count": 117,
+      "examples_not_in_parent": [
+        "bdd100k_val_8b8b26ce-00000000",
+        "bdd100k_val_923d6a65-e4fe1dae",
+        "bdd100k_val_95a6f8ce-f70d000a",
+        "bdd100k_val_99e65b79-72f54fd5",
+        "bdd100k_val_9b76b723-bb6302a3",
+        "bdd100k_val_a217361a-cdf174d7",
+        "bdd100k_val_a91b7555-00000630",
+        "cityscapes_val_val107",
+        "cityscapes_val_val169",
+        "cityscapes_val_val189"
+      ]
+    },
+    "is_97_subset_of_214": {
+      "parent": "multidataset_urban_sharp_214",
+      "child": "cityscapes_sharp_97",
+      "parent_count": 214,
+      "child_count": 97,
+      "intersection_count": 97,
+      "child_is_subset_of_parent": true,
+      "child_not_in_parent_count": 0,
+      "examples_not_in_parent": []
+    }
+  },
+  "case_3_canonical_empirical_3500_tier_counts": {
+    "description": "Under canonical 512x1024 resolution with empirical 3,500-image thresholds (1,796 Gentle / 1,196 Moderate / 508 Sharp)",
+    "cityscapes_val_sharp": 108,
+    "bdd100k_val_sharp": 225,
+    "mapillary_val_sharp": 175,
+    "total_sharp": 508
+  },
+  "biou_tier_weighting_definitions": {
+    "empirical_3500_weights": {
+      "Gentle": 0.513143,
+      "Moderate": 0.341714,
+      "Sharp": 0.145143
+    },
+    "standardized_weights": {
+      "Gentle": 0.5,
+      "Moderate": 0.33,
+      "Sharp": 0.17
+    }
+  }
+}

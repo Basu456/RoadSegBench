@@ -1,0 +1,5 @@
+dataset: bdd100k
+root: /content/drive/MyDrive/datasets/bdd100k
+# Replace with exact mask export convention and verified road class ID(s).
+road_ids: [REPLACE_WITH_VERIFIED_ROAD_ID]
+channel: null
