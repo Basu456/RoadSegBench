@@ -1,0 +1,2 @@
+image_id,dataset,scene_id,partition,split,image_path,mask_path,road_prop,curvature,curvature_tier,curvature_native,curvature_canonical,curvature_tier_fixed
+cityscapes_train_train1,cityscapes,cs_train_scene_000,train,train,train/img/train1.png,train/label/train1.png,0.273315,0.012409,Gentle,0.022281,0.012409,Moderate
