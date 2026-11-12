@@ -1,12 +1,19 @@
-Place author-generated CSV manifests here. Do not commit restricted dataset images.
 
-Create one row per image with columns:
-image_id,dataset,split,image_path,mask_path,partition,scene_id,curvature,curvature_tier
+### Frozen benchmark manifest
 
-Do not fill curvature/tier by hand unless the procedure is documented and audited.
-Keep train/tuning/threshold_validation/evaluation partitions disjoint at image level.
-Where sequence identifiers exist, consider sequence-level grouping to avoid scene leakage.
+The exact frozen manifest used for the experiments is included in:
 
-The benchmark manifest is `roadsegbench_manifest_with_curvature.csv`
-(SHA-256 53cbcd94881654cfe329519454d98510318742ab9113b0f0b27d0548210a6b11).
-See the main README, section 2, "Frozen manifest".
+`data/manifests/roadsegbench_manifest_with_curvature.csv`
+
+The manifest contains 31,475 image records with dataset identifiers,
+partition assignments, road curvature measurements and curvature-tier labels.
+
+SHA-256 checksum:
+
+`53cbcd94881654cfe329519454d98510318742ab9113b0f0b27d0548210a6b11`
+
+Researchers can verify the integrity of the downloaded manifest using
+the SHA-256 checksum above.
+
+The underlying dataset images and masks are not redistributed.
+Researchers must obtain the datasets from their respective official providers.
