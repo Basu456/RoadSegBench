@@ -12,7 +12,7 @@ from roadsegbench.data.decoders import build_decoder
 from roadsegbench.engine.train import train_one_run
 from roadsegbench.evaluation.infer import evaluate_checkpoint
 from roadsegbench.manifests import load_manifest
-from roadsegbench.statistics import friedman_test, nemenyi_cd_decisions, paired_normal_comparisons
+from roadsegbench.statistics import friedman_test, nemenyi_cd_decisions
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -187,7 +187,9 @@ def write_aggregated_reports(all_summaries: list[dict], latency_map: dict):
             agg_rows.append(row)
         pd.DataFrame(agg_rows).to_csv(RECORDS / f"table_{label}_by_dataset_model.csv", index=False)
 
-    # Compute Friedman + Nemenyi + Paired Normal/Holm tests per dataset where all 8 models share >= 2 seeds
+    # Compute Friedman + Nemenyi tests per dataset where all 8 models share >= 2 seeds.
+    # Pairwise Holm-corrected tests are not reported: with ten seeds an exact Wilcoxon test cannot
+    # reach the first Holm threshold for 28 pairs (see the manuscript, Section 3.5).
     stat_out = {}
     for ds, grp in df_runs.groupby("dataset"):
         piv = grp.pivot_table(index="seed", columns="model", values="road_iou_pct")
@@ -202,7 +204,6 @@ def write_aggregated_reports(all_summaries: list[dict], latency_map: dict):
             q_alpha = 3.031 if k == 8 else 2.850
             cd = float(q_alpha * np.sqrt(k * (k + 1) / (6.0 * n_blocks)))
             nem_df = nemenyi_cd_decisions(ranks, cd)
-            paired_df = paired_normal_comparisons(piv_clean.reset_index(), avail_models)
             stat_out[ds] = {
                 "n_paired_seeds": int(n_blocks),
                 "models_compared": avail_models,
@@ -211,7 +212,6 @@ def write_aggregated_reports(all_summaries: list[dict], latency_map: dict):
                 "mean_ranks": {m: round(float(r), 3) for m, r in ranks.items()},
                 "nemenyi_cd_alpha_005": round(cd, 4),
                 "nemenyi_decisions": nem_df.to_dict(orient="records"),
-                "paired_holm_comparisons": paired_df.to_dict(orient="records"),
             }
     with (RECORDS / "statistical_significance_tests.json").open("w", encoding="utf-8") as f:
         json.dump(stat_out, f, indent=2)
@@ -222,11 +222,11 @@ def main():
     p.add_argument("--stage", choices=["1", "2", "all"], default="all")
     p.add_argument("--datasets", default="cityscapes,bdd100k,mapillary")
     p.add_argument("--models", default=",".join(ALL_MODELS))
-    p.add_argument("--epochs", type=int, default=12)
+    p.add_argument("--epochs", type=int, default=8)  # value used for the 240 runs
     p.add_argument("--max-steps-per-epoch", type=int, default=150)
     p.add_argument("--batch-size", type=int, default=8)
     p.add_argument("--grad-accum-steps", type=int, default=2)
-    p.add_argument("--patience", type=int, default=4)
+    p.add_argument("--patience", type=int, default=3)  # value used for the 240 runs
     p.add_argument("--workers", type=int, default=0)
     args = p.parse_args()
 
@@ -247,8 +247,19 @@ def main():
     latency_map = {}
     lat_json_path = RECORDS / "confirmed_8_architectures_table.json"
     if lat_json_path.exists():
-        for item in json.loads(lat_json_path.read_text()):
-            latency_map[item["architecture"]] = item
+        # The table lists two SCTNet variants (B and S) under one architecture name.
+        # Use the row whose variant is the one actually trained (configs/models/architectures.yaml);
+        # previously the later SCTNet-S row silently overwrote SCTNet-B.
+        trained_variant = {name: cfg.get("variant") for name, cfg in arch_cfgs.items()}
+        lat_rows = json.loads(lat_json_path.read_text())
+        n_rows = {}
+        for item in lat_rows:
+            n_rows[item["architecture"]] = n_rows.get(item["architecture"], 0) + 1
+        for item in lat_rows:
+            arch = item["architecture"]
+            if n_rows[arch] > 1 and item.get("variant") != trained_variant.get(arch):
+                continue
+            latency_map[arch] = item
 
     # Load Cityscapes 97 and 214 Sharp image ID sets
     cs_97_set = set()

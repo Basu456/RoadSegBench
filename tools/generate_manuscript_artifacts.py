@@ -1,16 +1,18 @@
 """
-Generate Camera-Ready Manuscript Artifacts for RoadSegBench (IJIES Paper ID 20267157).
-Generates:
-1. Publication-quality LaTeX tables (Booktabs format):
-   - Table 1: Primary Benchmark (8 models x 3 datasets x 10 seeds: IoU, 95% CI, Dice, BIoU)
-   - Table 2: Curvature Decomposition & Reconciled Discrepancies (Gentle, Moderate, Sharp, 97 vs 214 Sharp CS, Dual BIoU)
-   - Table 3: Hardware Efficiency on NVIDIA RTX A4000 (Params, FP32 Latency, FPS, Peak VRAM)
-   - Table 4: Friedman & Nemenyi Statistical Significance Matrix
-2. Publication-quality figures (DPI=300):
-   - Fig 1: Statistical Critical Difference (CD) Diagrams
-   - Fig 2: Multi-Model Qualitative Predictions & Error Overlays (Gentle, Moderate, Sharp)
-   - Fig 3: Failure-Case Boundary Erosion Analysis on Sharp Turns
-3. Copies figures to artifact directory for interactive rendering.
+Generate LaTeX tables and figures from the RoadSegBench run records.
+
+Tables (records/manuscript_latex/):
+   - table1: primary benchmark (8 models x 3 datasets x 10 seeds: IoU, 95% CI, Dice, BIoU)
+   - table2: road IoU by tier and the 97/214-image Cityscapes subsets
+   - table3: efficiency on NVIDIA RTX A4000 (parameters, FP32 latency, FPS, peak VRAM)
+   - table4: Friedman and Nemenyi tests
+Figures (records/manuscript_figures/):
+   - figure1: Nemenyi critical-difference diagrams
+   - figure2: qualitative predictions of PIDNet-M and BiSeNetV2 (needs the real sample
+     predictions saved by tools/run_staged_benchmark.py; stops with an error if they are missing)
+
+Tier labels in the records use the original names: Gentle = Low, Moderate = Medium,
+Sharp = High outline complexity (see the manuscript, Section 3.2).
 """
 
 import os
@@ -337,16 +339,15 @@ def generate_figure2_qualitative_predictions():
         pid_pred_file = REPO / f"outputs/runs/cityscapes/pidnet/seed_11/eval/sample12/predictions/{img_id}.png"
         bise_pred_file = REPO / f"outputs/runs/cityscapes/bisenetv2/seed_11/eval/sample12/predictions/{img_id}.png"
         
-        if pid_pred_file.exists():
-            pid_pred = (np.array(Image.open(pid_pred_file).convert("L")) > 127).astype(np.uint8)
-        else:
-            # Fallback mock prediction close to GT with minor boundary noise
-            pid_pred = gt_mask.copy()
-            
-        if bise_pred_file.exists():
-            bise_pred = (np.array(Image.open(bise_pred_file).convert("L")) > 127).astype(np.uint8)
-        else:
-            bise_pred = gt_mask.copy()
+        # Only real model predictions are drawn: a missing prediction file is an error,
+        # never replaced by the ground truth.
+        for f in (pid_pred_file, bise_pred_file):
+            if not f.exists():
+                raise FileNotFoundError(
+                    f"Prediction file not found: {f}. Run tools/run_staged_benchmark.py first; "
+                    "it saves sample predictions for seed 11 in eval/sample12/predictions.")
+        pid_pred = (np.array(Image.open(pid_pred_file).convert("L")) > 127).astype(np.uint8)
+        bise_pred = (np.array(Image.open(bise_pred_file).convert("L")) > 127).astype(np.uint8)
             
         # Error overlay:
         # TP = Green [0, 220, 0], FP = Red [230, 30, 30], FN = Blue [30, 100, 240]
@@ -392,94 +393,6 @@ def generate_figure2_qualitative_predictions():
     print(f"Saved {out_png}")
 
 
-def generate_figure3_failure_cases():
-    """
-    Generate Fig 3: Failure Case Deep-Dive on Sharp Turns.
-    Analyzes boundary erosion, apex under-segmentation, and distant lane vanishing on sharp roads.
-    """
-    manifest = pd.read_csv(REPO / "data/manifests/roadsegbench_manifest_with_curvature.csv")
-    sharp_map = manifest[(manifest["dataset"] == "mapillary") & (manifest["curvature_tier"] == "Sharp")].iloc[10]
-    sharp_bdd = manifest[(manifest["dataset"] == "bdd100k") & (manifest["curvature_tier"] == "Sharp")].iloc[15]
-    
-    fig, axes = plt.subplots(2, 4, figsize=(15, 7), dpi=300)
-    
-    # Titles
-    axes[0, 0].set_title("Input RGB (Mapillary Sharp)", fontsize=11, fontweight="bold")
-    axes[0, 1].set_title("Ground Truth Mask", fontsize=11, fontweight="bold")
-    axes[0, 2].set_title("SegFormer Prediction", fontsize=11, fontweight="bold")
-    axes[0, 3].set_title("Boundary Error Breakdown", fontsize=11, fontweight="bold")
-    
-    axes[1, 0].set_title("Input RGB (BDD100K Sharp Night)", fontsize=11, fontweight="bold")
-    axes[1, 1].set_title("Ground Truth Mask", fontsize=11, fontweight="bold")
-    axes[1, 2].set_title("PIDNet-M Prediction", fontsize=11, fontweight="bold")
-    axes[1, 3].set_title("Boundary Error Breakdown", fontsize=11, fontweight="bold")
-    
-    # Process Mapillary
-    map_root = ROOT / "datasets/mapillary_vistas/Mapillary Vistas"
-    m_img_path = map_root / sharp_map["image_path"]
-    m_mask_path = map_root / sharp_map["mask_path"]
-    if not m_img_path.exists():
-        cache_img = ROOT / f"datasets/_cache_512x1024/mapillary/{sharp_map['image_id']}_img.png"
-        cache_mask = ROOT / f"datasets/_cache_512x1024/mapillary/{sharp_map['image_id']}_mask.png"
-        m_img = Image.open(cache_img).convert("RGB")
-        m_gt = (np.array(Image.open(cache_mask).convert("L")) > 0).astype(np.uint8)
-    else:
-        m_img = Image.open(m_img_path).convert("RGB").resize((1024, 512), Image.BILINEAR)
-        m_lbl = Image.open(m_mask_path).resize((1024, 512), Image.NEAREST)
-        m_gt = (np.array(m_lbl) == 13).astype(np.uint8)
-    m_img_np = np.array(m_img)
-
-    # Create error visualization
-    # SegFormer prediction mock/eval
-    m_pred = m_gt.copy()
-    m_pred[380:, 800:] = 0  # Under-segmentation near sharp boundary
-    m_overlay = m_img_np.copy()
-    m_overlay[(m_pred == 1) & (m_gt == 1)] = (0.5 * m_overlay[(m_pred == 1) & (m_gt == 1)] + 0.5 * np.array([0, 220, 0])).astype(np.uint8)
-    m_overlay[(m_pred == 0) & (m_gt == 1)] = (0.3 * m_overlay[(m_pred == 0) & (m_gt == 1)] + 0.7 * np.array([30, 120, 240])).astype(np.uint8)
-
-    axes[0, 0].imshow(m_img_np)
-    axes[0, 1].imshow(m_gt, cmap="inferno")
-    axes[0, 2].imshow(m_pred, cmap="inferno")
-    axes[0, 3].imshow(m_overlay)
-
-    # Process BDD100K
-    bdd_root = ROOT / "datasets/bdd100k/bdd100k_seg/bdd100k/seg"
-    b_img_path = bdd_root / sharp_bdd["image_path"]
-    b_mask_path = bdd_root / sharp_bdd["mask_path"]
-    if not b_img_path.exists():
-        cache_img = ROOT / f"datasets/_cache_512x1024/bdd100k/{sharp_bdd['image_id']}_img.png"
-        cache_mask = ROOT / f"datasets/_cache_512x1024/bdd100k/{sharp_bdd['image_id']}_mask.png"
-        b_img = Image.open(cache_img).convert("RGB")
-        b_gt = (np.array(Image.open(cache_mask).convert("L")) > 0).astype(np.uint8)
-    else:
-        b_img = Image.open(b_img_path).convert("RGB").resize((1024, 512), Image.BILINEAR)
-        b_lbl = Image.open(b_mask_path).resize((1024, 512), Image.NEAREST)
-        b_gt = (np.array(b_lbl) == 0).astype(np.uint8)
-    b_img_np = np.array(b_img)
-    
-    b_pred = b_gt.copy()
-    b_pred[400:, 750:] = 0
-    b_overlay = b_img_np.copy()
-    b_overlay[(b_pred == 1) & (b_gt == 1)] = (0.5 * b_overlay[(b_pred == 1) & (b_gt == 1)] + 0.5 * np.array([0, 220, 0])).astype(np.uint8)
-    b_overlay[(b_pred == 0) & (b_gt == 1)] = (0.3 * b_overlay[(b_pred == 0) & (b_gt == 1)] + 0.7 * np.array([30, 120, 240])).astype(np.uint8)
-    
-    axes[1, 0].imshow(b_img_np)
-    axes[1, 1].imshow(b_gt, cmap="inferno")
-    axes[1, 2].imshow(b_pred, cmap="inferno")
-    axes[1, 3].imshow(b_overlay)
-    
-    for ax_row in axes:
-        for ax in ax_row:
-            ax.set_xticks([])
-            ax.set_yticks([])
-            
-    plt.tight_layout()
-    out_png = OUT_FIGS / "figure3_sharp_curvature_failure_modes.png"
-    plt.savefig(out_png, bbox_inches="tight")
-    plt.close()
-    print(f"Saved {out_png}")
-
-
 if __name__ == "__main__":
     print("Generating manuscript LaTeX tables...")
     generate_table1_primary()
@@ -488,6 +401,5 @@ if __name__ == "__main__":
     generate_table4_statistical_tests()
     print("Generating manuscript publication figures...")
     generate_figure1_nemenyi_cd()
-    generate_figure2_qualitative_predictions()
-    generate_figure3_failure_cases()
+    generate_figure2_qualitative_predictions()  # needs the real sample predictions of seed 11
     print("All manuscript artifacts generated successfully!")

@@ -1,12 +1,13 @@
-# These names must match the exact variant used in the manuscript.
-# Native generic baselines are not substitutes for PIDNet/DDRNet/BiSeNetV2/SCTNet.
-architectures:
+# Model configurations used for the 240 benchmark runs, taken from the run.json of every run
+# (records/run_configs_240runs.json). tools/run_staged_benchmark.py and tools/run_one_seed_pilot.py
+# read these two groups. initial_lr is the AdamW learning rate (default 0.001).
+primary_architectures:
   unet: {encoder: resnet34, encoder_weights: imagenet}
-  deeplabv3plus: {encoder: resnet50, encoder_weights: imagenet}
-  segformer: {checkpoint: nvidia/mit-b2}
-  fpn: {encoder: resnet34, encoder_weights: imagenet}
-  pspnet: {encoder: resnet34, encoder_weights: imagenet}
-  pidnet: {adapter: REQUIRED_PINNED_UPSTREAM}
-  ddrnet: {adapter: REQUIRED_PINNED_UPSTREAM}
-  bisenetv2: {adapter: REQUIRED_PINNED_UPSTREAM}
-  sctnet: {adapter: REQUIRED_PINNED_UPSTREAM}
+  deeplabv3plus: {encoder: resnet101, encoder_weights: imagenet}
+  bisenetv2: {pretrained: true}
+  ddrnet: {variant: ddrnet_23, boundary_refinement: false, pretrained: true}
+  pidnet: {variant: pidnet-m, pretrained: true}
+  segformer: {checkpoint: nvidia/mit-b2, initial_lr: 0.00006}
+extended_architectures:
+  sctnet: {variant: sctnet-b, pretrained: true}
+  ddrnet_br: {variant: ddrnet_23, boundary_refinement: true, pretrained: true}

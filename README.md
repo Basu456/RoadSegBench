@@ -1,15 +1,25 @@
-# RoadSegBench: Reproducible Benchmarking of Curvy Road Segmentation
+# RoadSegBench: A Reproducible Multi-Seed Benchmark of Road Segmentation Stratified by Mask-Outline Complexity
 
-Code, evaluation records, run-level results and analysis scripts for the paper
+Code, evaluation records, per-image results and analysis scripts for the paper
 
-> B. Chougula, A. Gudnavar, and K. Naregal, "RoadSegBench: Reproducible Benchmarking of Curvy Road Segmentation".
+> B. Chougula, A. Gudnavar, and K. Naregal, "RoadSegBench: A Reproducible Multi-Seed Benchmark of Road Segmentation Stratified by Mask-Outline Complexity".
 
-RoadSegBench evaluates road segmentation separately on **Gentle**, **Moderate** and **Sharp**
-apparent-curvature tiers of Cityscapes, BDD100K and Mapillary Vistas road masks. It reports
-region accuracy (IoU) alongside boundary accuracy (BIoU) and inference efficiency for eight
-architectures trained under one shared protocol with ten random seeds:
-PIDNet-M, DDRNet-23, DDRNet-23+BR, BiSeNetV2, SegFormer-B2, U-Net (ResNet-34), SCTNet-B and
-DeepLabV3+ (ResNet-101).
+RoadSegBench compares eight road-segmentation architectures trained independently on
+Cityscapes, BDD100K and Mapillary Vistas with ten random seeds each (240 runs) on one frozen
+manifest: PIDNet-M, DDRNet-23, DDRNet-23+BR, BiSeNetV2, SegFormer-B2, U-Net (ResNet-34),
+SCTNet-B and DeepLabV3+ (ResNet-101). Besides overall road IoU, Boundary IoU and efficiency, it
+reports accuracy within three tiers of **mask-outline complexity** (Low, Medium, High), assigned
+once per evaluation image from the mean curvature of the road-mask outline.
+
+**What the tiers are and are not.** The outline-curvature index measures the complexity of the
+road-mask outline. It does **not** measure road bending: on controlled shapes it does not separate
+straight from curved road corridors, and on real masks it correlates weakly with a centerline
+measure (manuscript, Section 4.8). The tier results are descriptive, dataset-specific
+associations, not validated indicators of road geometry or difficulty.
+
+**Tier names in the files.** Records and code use the original labels `Gentle`, `Moderate` and
+`Sharp`. They correspond to the **Low**, **Medium** and **High** outline-complexity tiers of the
+paper. Thresholds and image assignments are unchanged.
 
 ---
 
@@ -17,38 +27,31 @@ DeepLabV3+ (ResNet-101).
 
 ```
 RoadSegBench/
-├── roadsegbench/            # Python package
-│   ├── curvature.py         #   curvature extractor and tier assignment
-│   ├── manifests.py         #   frozen-manifest loading and checks
-│   ├── metrics.py           #   IoU / BIoU
-│   ├── statistics.py        #   Friedman / Nemenyi / Wilcoxon + Holm
-│   ├── audit.py             #   dataset audits
-│   ├── data/                #   datasets and label decoders
-│   ├── models/              #   architecture registry
-│   ├── engine/              #   training loop
-│   └── evaluation/          #   inference and latency measurement
+├── roadsegbench/            # Python package (outline index, metrics, statistics, data, models)
 ├── configs/
-│   ├── experiment.yaml      # shared training / evaluation protocol, seeds, curvature thresholds
+│   ├── experiment.yaml      # protocol of the 240 runs, outline-index settings, thresholds
 │   ├── datasets/            # cityscapes.yaml, bdd100k.yaml, mapillary.yaml
-│   └── models/architectures.yaml
-├── tools/                   # end-to-end pipeline scripts (steps 1–8 below)
+│   └── models/architectures.yaml   # model configurations of the 240 runs
+├── tools/                   # pipeline scripts (steps 1–8 below) and near_empty_analysis.py
 ├── scripts/                 # train_matrix.py, run_analysis.py, validate_manifest.py
 ├── notebooks/               # Colab reproducibility notebook
 ├── tests/                   # unit tests
-├── data/manifests/          # frozen manifest (see note in section 2)
-├── records/                 # everything the paper's numbers come from:
-│   ├── *_audit.csv, *_mask_stats.json, cityscapes_sharp_97_ids.csv, sharp_214_ids.csv,
-│   │   reconciliation_97_vs_214.json, manifest_audit_report.json   (data definition)
-│   ├── stage1_72runs_summary.csv, stage2_240runs_summary.csv,
-│   │   statistical_significance_tests.json                          (run-level results)
-│   ├── curvature_*.csv, curvature_probe_output.txt                  (extractor validation)
-│   ├── Deliverable_1..4_*.json                                      (audit reports)
-│   ├── requirements_lock_main_env.txt, third_party_lock.csv,
-│   │   pretrained_sha256.csv, dataset_archives_sha256.csv, nvidia-smi*.txt
-│   ├── manuscript_latex/    # generated LaTeX tables
-│   ├── manuscript_figures/  # generated figures
-│   └── visual_checks/       # curvature validation plot
-└── requirements-colab.txt   # dependencies for the Colab notebook
+├── data/manifests/          # frozen manifest (31,475 images)
+└── records/                 # everything the paper's numbers come from:
+    ├── per_image_metrics_240runs.csv.gz   per-image results of all 240 runs
+    ├── run_configs_240runs.json           configuration of every run
+    ├── stage1_72runs_summary.csv, stage2_240runs_summary.csv  run-level summaries
+    ├── table_all_completed_seeds_by_dataset_model.csv         per model and dataset
+    ├── statistical_significance_tests.json                    Friedman and Nemenyi
+    ├── *_audit.csv, *_mask_stats.json, manifest_audit_report.json   data definition
+    ├── cityscapes_sharp_97_ids.csv, sharp_214_ids.csv, reconciliation_97_vs_214.json
+    ├── curvature_*.csv, curvature_probe_output.txt, visual_checks/  outline-index validation
+    ├── confirmed_8_architectures_table.*  parameters, latency, memory
+    ├── Deliverable_1..4_*.json            audit reports
+    ├── requirements_lock_main_env.txt, third_party_lock.csv, pretrained_sha256.csv,
+    │   dataset_archives_sha256.csv, nvidia-smi*.txt
+    ├── manuscript_latex/    # LaTeX tables generated by tools/generate_manuscript_artifacts.py
+    └── manuscript_figures/  # critical-difference diagrams
 ```
 
 ---
@@ -80,10 +83,10 @@ Clone each one into `third_party/` at the commit pinned in `records/third_party_
 | Folder in `third_party/` | Used for |
 |---|---|
 | `BiSeNet` | BiSeNetV2 |
-| `DDRNet` | DDRNet |
-| `PIDNet` | PIDNet |
-| `SCTNet` | SCTNet (including its training-only transformer teacher) |
-| `SegFormer` | SegFormer |
+| `DDRNet` | DDRNet-23 and DDRNet-23+BR |
+| `PIDNet` | PIDNet-M |
+| `SCTNet` | SCTNet-B |
+| `SegFormer` | SegFormer-B2 |
 | `cityscapesScripts` | Cityscapes label handling |
 | `bdd100k` | BDD100K label handling |
 | `mapillary_vistas` | Mapillary Vistas label handling |
@@ -97,8 +100,9 @@ licence before reusing them.
 python tools/download_pretrained.py
 ```
 
-Downloads ImageNet / teacher checkpoints from their original authors. The files are checked
-against `records/pretrained_sha256.csv`.
+Downloads the ImageNet / generic backbone checkpoints from their original authors. The files are
+checked against `records/pretrained_sha256.csv`. No checkpoint fine-tuned on Cityscapes, BDD100K
+or Mapillary Vistas is used.
 
 ---
 
@@ -137,13 +141,12 @@ The experiments used archives obtained from Kaggle mirrors of these datasets.
 remain authoritative; compare against `records/dataset_archives_sha256.csv` to confirm you have
 the same files.
 
----
-
 ### Frozen manifest
 
-All results were computed on one frozen manifest, `roadsegbench_manifest_with_curvature.csv`
-(31,475 images; SHA-256 `53cbcd94881654cfe329519454d98510318742ab9113b0f0b27d0548210a6b11`).
-Its partition and tier counts, and the zero-overlap checks between partitions, are recorded in
+All results were computed on one frozen manifest,
+`data/manifests/roadsegbench_manifest_with_curvature.csv` (31,475 images; SHA-256
+`53cbcd94881654cfe329519454d98510318742ab9113b0f0b27d0548210a6b11`). Its partition and tier
+counts, and the zero-overlap checks between partitions, are recorded in
 `records/manifest_audit_report.json`.
 
 | | train | tuning | threshold validation | evaluation |
@@ -152,59 +155,71 @@ Its partition and tier counts, and the zero-overlap checks between partitions, a
 | BDD100K | 6,150 | 700 | 150 | 1,000 |
 | Mapillary Vistas | 16,050 | 1,800 | 150 | 2,000 |
 
-**The manifest file itself will be added to `data/manifests/` in an upcoming release.** Until
-then it can be regenerated with step 2 below; compare the SHA-256 of the result with the value
-above to confirm it is identical.
+The tuning partition is used only to select the checkpoint of each run (on its first 300
+images). The threshold-validation partition is held out and not used by any reported result.
 
 ---
 
-## 3. Reproducing the benchmark
+## 3. Reproducing the results
+
+### Without retraining
+
+| Result in the paper | Command or file |
+|---|---|
+| Tables 2–4 (per-dataset results), Table 5 (Friedman), Table 6 (Nemenyi) | `records/stage2_240runs_summary.csv`, `records/table_all_completed_seeds_by_dataset_model.csv`, `records/statistical_significance_tests.json` |
+| Table 7 (parameters, latency, memory) | `records/confirmed_8_architectures_table.csv` (SCTNet-S was timed only; it was not trained) |
+| Table 9 (High minus Low tier, with and without the 70 near-empty masks) | `python tools/near_empty_analysis.py` |
+| Table 11 (97- and 214-image Cityscapes subsets) | `records/cityscapes_sharp_97_ids.csv`, `records/sharp_214_ids.csv`, `records/reconciliation_97_vs_214.json` |
+| Tables 12–13, Fig. 5 (outline-index validation) | `records/curvature_*.csv`, `records/Deliverable_3_Curvature_Validation_Report.json`, `records/visual_checks/` |
+| Section 3.4 (training settings) | `records/run_configs_240runs.json` |
+
+`tools/near_empty_analysis.py` recomputes Table 9 from the per-image results. Values can differ
+from the manuscript by 0.01 points, because some manuscript values were computed from rounded run
+summaries.
+
+### Full pipeline
 
 Run the steps in order from the repository root.
 
 | Step | Command | Output |
 |---|---|---|
 | 1. Audit datasets | `python tools/audit_cityscapes.py`<br>`python tools/audit_bdd100k.py`<br>`python tools/audit_mapillary.py` | per-image audit CSVs and mask stats (`records/`) |
-| 2. Build frozen manifest | `python tools/build_frozen_manifest.py`<br>`python tools/finalize_manifest_and_audit.py`<br>`python scripts/validate_manifest.py` | train / tuning / evaluation file lists and tier assignments; `manifest_audit_report.json` |
-| 3. Validate curvature extractor | `python tools/validate_curvature_suite.py` | `records/curvature_*.csv`, `records/visual_checks/curvature_validation_suite.png` |
+| 2. Build frozen manifest | `python tools/build_frozen_manifest.py`<br>`python tools/finalize_manifest_and_audit.py`<br>`python scripts/validate_manifest.py` | partitions and tier assignments; `manifest_audit_report.json` |
+| 3. Validate the outline index | `python tools/validate_curvature_suite.py` | `records/curvature_*.csv`, `records/visual_checks/curvature_validation_suite.png` |
 | 4. Pre-resize images | `python tools/build_512x1024_cache.py` | 512×1024 image / mask cache |
-| 5. Check architectures | `python tools/verify_8_architectures.py` | `records/confirmed_8_architectures_table.*` |
+| 5. Check architectures, measure latency | `python tools/verify_8_architectures.py` | `records/confirmed_8_architectures_table.*` |
 | 6. One-seed pilot | `python tools/run_one_seed_pilot.py` | `records/Deliverable_4_Pilot_and_Protocol_Report.json` |
-| 7. Full benchmark | `python tools/run_staged_benchmark.py` | Stage 1: 72 runs (8 models × 3 datasets × 3 seeds)<br>Stage 2: 240 runs (8 models × 3 datasets × 10 seeds) |
-| 8. Statistics, tables and figures | `python scripts/run_analysis.py`<br>`python tools/generate_manuscript_artifacts.py` | `records/statistical_significance_tests.json`, `records/manuscript_latex/*.tex`, `records/manuscript_figures/*.png` |
+| 7. Full benchmark | `python tools/run_staged_benchmark.py` | 240 runs: per-image results, run configurations and summaries |
+| 8. Statistics and tables | `python scripts/run_analysis.py`<br>`python tools/generate_manuscript_artifacts.py` | `records/statistical_significance_tests.json`, `records/manuscript_latex/*.tex`, `records/manuscript_figures/*.png` |
 
-To regenerate the paper's tables and figures **without retraining**, run only step 8 on the
-included `records/stage2_240runs_summary.csv`.
-
-### Paper ↔ repository map
-
-| In the paper | File in this repository | Generated by |
-|---|---|---|
-| Table 1 – primary benchmark | `records/manuscript_latex/table1_primary_benchmark.tex` | step 8 |
-| Table 2 – curvature tiers and discrepancies | `records/manuscript_latex/table2_curvature_and_discrepancies.tex` | step 8 |
-| Table 3 – hardware efficiency | `records/manuscript_latex/table3_hardware_efficiency.tex` | step 8 |
-| Table 4 – statistical significance | `records/manuscript_latex/table4_statistical_significance.tex` | step 8 |
-| Fig. 1 – Nemenyi critical difference | `records/manuscript_figures/figure1_nemenyi_critical_difference.png` | step 8 |
-| Fig. 2 – qualitative predictions | `records/manuscript_figures/figure2_qualitative_predictions_grid.png` | step 8 |
-| Fig. 3 – Sharp-curvature failure modes | `records/manuscript_figures/figure3_sharp_curvature_failure_modes.png` | step 8 |
-| Sharp subset (97 images) vs. urban Sharp control (214 images) | `records/cityscapes_sharp_97_ids.csv`, `records/sharp_214_ids.csv`, `records/reconciliation_97_vs_214.json` | step 2 |
-| Curvature extractor validation | `records/curvature_*.csv`, `records/Deliverable_3_Curvature_Validation_Report.json` | step 3 |
-| Raw and Holm-adjusted p-values, test statistics | `records/statistical_significance_tests.json` | step 8 |
-| Per-run (model × dataset × seed) results | `records/stage2_240runs_summary.csv` | step 7 |
+**Not yet included:** the model adapters for PIDNet, DDRNet, BiSeNetV2 and SCTNet in
+`roadsegbench/models/registry.py`, and the versions of `roadsegbench/engine/train.py` and
+`roadsegbench/evaluation/infer.py` used for the 240 runs. Until they are added, steps 5–7 cannot be
+rerun from this repository. All reported results can be checked without retraining from the
+records above.
 
 ---
 
 ## 4. Protocol summary
 
-- **Curvature tiers:** thresholds and extractor settings are in `configs/experiment.yaml`.
-  The curvature index is measured in the normalised image plane. It is **not** physical road
-  curvature.
-- **Seeds:** 10 per model–dataset pair. The seed list is in `configs/experiment.yaml`.
-- **Data splits:** training, tuning (loss-weight and threshold selection) and evaluation
-  images are disjoint. See `data/manifests/`, `records/manifest_audit_report.json` and `records/Deliverable_2_Dataset_and_Manifest_Audit.json`.
-- **Latency:** measured as described in `roadsegbench/evaluation/latency.py`. Reported
-  latencies (FP32) were measured on an NVIDIA RTX A4000; see `records/nvidia-smi.txt` and
-  `records/manuscript_latex/table3_hardware_efficiency.tex`.
+All values are in `configs/experiment.yaml` and in the configuration of every run
+(`records/run_configs_240runs.json`).
+
+- **Training:** 512 × 1024 inputs; horizontal flip and brightness-contrast jitter; loss = binary
+  cross-entropy + 0.5 × soft Dice + 0.75 × Lovász hinge; AdamW (learning rate 0.001, 0.00006 for
+  SegFormer-B2; weight decay 0.01) with cosine annealing to 0.000001; mixed precision; 8 epochs
+  with at most 150 steps per epoch (300 for the batch-size-4 models); batch size 8 with two-step
+  gradient accumulation (4 with four-step accumulation for DeepLabV3+ and SegFormer-B2). Early
+  stopping with patience 3 was enabled but never triggered.
+- **Seeds:** 11, 22, 33, 44, 55, 66, 77, 88, 99 and 111 for every model–dataset pair.
+- **Outline-complexity tiers:** Low < 0.013447 ≤ Medium < 0.022563 ≤ High, on the index computed at
+  512 × 1024. The fixed thresholds 0.010 / 0.030 are used only in the sensitivity analysis.
+- **Near-empty masks:** 70 evaluation masks contain road in less than 0.2% of the image. Every
+  model scores about 0% IoU on them, and they distort the tier differences (Table 9).
+- **Metrics:** per-image road IoU (single class, threshold 0.5) averaged over images, then mean
+  and standard deviation over seeds; Boundary IoU as implemented in `roadsegbench/metrics.py`.
+- **Latency:** PyTorch eager mode, FP32, batch size 1, 30 warm-up and 100 timed iterations, on an
+  NVIDIA RTX A4000 (`records/nvidia-smi.txt`).
 
 ---
 

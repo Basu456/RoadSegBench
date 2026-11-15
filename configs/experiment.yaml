@@ -1,41 +1,57 @@
+# Protocol of the 240 benchmark runs (8 models x 3 datasets x 10 seeds), as recorded in
+# records/run_configs_240runs.json. Command-line defaults of tools/run_staged_benchmark.py match it.
 project: RoadSegBench
 seed_values: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
 image_size: [512, 1024]
-batch_size: 4
-epochs: 100
-learning_rate: 0.0001
-weight_decay: 0.0001
-num_workers: 2
-checkpoint_metric: validation_road_iou
-checkpoint_mode: max
-curvature:
+
+training:
+  epochs: 8
+  max_steps_per_epoch: 150          # doubled (300) for the two models trained with batch size 4
+  batch_size: 8                     # 4 for deeplabv3plus and segformer
+  grad_accum_steps: 2               # 4 for deeplabv3plus and segformer
+  optimizer: AdamW
+  betas: [0.9, 0.999]
+  learning_rate: 0.001              # 0.00006 for segformer (configs/models/architectures.yaml)
+  weight_decay: 0.01
+  scheduler: CosineAnnealingLR
+  eta_min: 0.000001
+  loss: "1.0*BCEWithLogits + 0.5*SoftDice + 0.75*LovaszHinge"
+  amp: true
+  augmentation: "horizontal flip; brightness-contrast jitter (gain 0.9-1.1, shift +-0.03); each with p = 0.5"
+  checkpoint_rule: "maximum road IoU on the first 300 tuning images; early stopping"
+  patience: 3                       # never triggered: all 240 runs completed 8 epochs
+
+outline_index:
+  # Mean curvature of the largest external road-mask contour (manuscript, Section 3.2).
   method: external_largest_contour_periodic_cubic_spline
   spline_degree: 3
-  smoothing: 1.0
+  smoothing: "1.5 * number of contour points"
   samples: 500
-  gentle_upper: 0.010
-  moderate_upper: 0.030
+  min_contour_points: 20
+  # Primary tiers (empirical thresholds). Labels in the records: Gentle = Low,
+  # Moderate = Medium, Sharp = High outline complexity.
+  low_upper: 0.013447
+  medium_upper: 0.022563
+  # Secondary tiering used only for the sensitivity analysis (Section 4.5)
+  fixed_low_upper: 0.010
+  fixed_medium_upper: 0.030
+  near_empty_road_fraction: 0.002   # masks below this are reported separately (Table 9)
+
 metrics:
-  primary_endpoint: road_iou
-  boundary_iou_radius_pixels: 2
+  primary_endpoint: road_iou        # single-class road IoU per image, threshold 0.5
   threshold: 0.5
-datasets:
-  # Set roots in Colab; do not put private/local absolute paths in this file.
-  cityscapes: ""
-  bdd100k: ""
-  mapillary: ""
+  boundary_iou_radius_pixels: 3     # value passed by tools/run_staged_benchmark.py
+
 partitions:
   train: train
   tuning: tuning
   threshold_validation: threshold_validation
   evaluation: evaluation
-training:
-  augmentation: "Document exact transforms/ranges in run metadata before execution."
-  pretrained_weights: "Record exact source and checksum."
-  architecture: "Set exact model variant in each run record."
+
 latency:
   backend: pytorch
-  warmup_iterations: 50
-  measured_iterations: 200
   precision: fp32
+  batch_size: 1
+  warmup_iterations: 30             # values used in tools/verify_8_architectures.py
+  measured_iterations: 100
   synchronize_cuda: true
