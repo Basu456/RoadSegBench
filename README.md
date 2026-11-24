@@ -20,7 +20,7 @@ associations, not validated indicators of road geometry or difficulty.
 ## Version used for the paper
 
 The results in the revised manuscript were produced from release **`v2.0.0`**
-(commit `<FULL 40-CHARACTER HASH>`; archived as DOI `<ZENODO DOI>`). To audit exactly that version:
+(commit `ed748237420e2b9d23ea80fc34f9c59aa51d0516`). To audit exactly that version:
 
 ```bash
 git clone https://github.com/Basu456/RoadSegBench.git
