@@ -212,12 +212,6 @@ Run the steps in order from the repository root.
 | 7. Full benchmark | `python tools/run_staged_benchmark.py` | 240 runs: per-image results, run configurations and summaries |
 | 8. Statistics and tables | `python scripts/run_analysis.py`<br>`python tools/generate_manuscript_artifacts.py` | `records/statistical_significance_tests.json`, `records/manuscript_latex/*.tex`, `records/manuscript_figures/*.png` |
 
-**Not yet included:** the model adapters for PIDNet, DDRNet, BiSeNetV2 and SCTNet in
-`roadsegbench/models/registry.py`, and the versions of `roadsegbench/engine/train.py` and
-`roadsegbench/evaluation/infer.py` used for the 240 runs. Until they are added, steps 5–7 cannot be
-rerun from this repository. All reported results can be checked without retraining from the
-records above.
-
 ---
 
 ## 4. Protocol summary
