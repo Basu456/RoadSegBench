@@ -17,9 +17,29 @@ straight from curved road corridors, and on real masks it correlates weakly with
 measure (manuscript, Section 4.8). The tier results are descriptive, dataset-specific
 associations, not validated indicators of road geometry or difficulty.
 
+## Version used for the paper
+
+The results in the revised manuscript were produced from release **`v2.0.0`**
+(commit `<FULL 40-CHARACTER HASH>`; archived as DOI `<ZENODO DOI>`). To audit exactly that version:
+
+```bash
+git clone https://github.com/Basu456/RoadSegBench.git
+cd RoadSegBench
+git checkout v2.0.0
+```
+
+The earlier release `v1.0.0` (commit `5b96f72`) belongs to the first submission, which described a
+curvature-stratified benchmark ("Gentle/Moderate/Sharp curvature tiers") under the title
+"RoadSegBench: Reproducible Benchmarking of Curvy Road Segmentation". That framing is
+superseded. Thresholds and image assignments are the same, but the tiers are now
+interpreted only as mask-outline complexity, and `v1.0.0` lacks the per-image results
+and run configurations needed to check the revised claims.
+
 **Tier names in the files.** Records and code use the original labels `Gentle`, `Moderate` and
 `Sharp`. They correspond to the **Low**, **Medium** and **High** outline-complexity tiers of the
-paper. Thresholds and image assignments are unchanged.
+paper. Thresholds and image assignments are unchanged. The same mapping applies to column names:
+`curvature`, `curvature_tier` and `curvature_*` files refer to the outline-curvature index and
+its tiers, and the `Sharp-97` / `Sharp-214` subsets are High-tier subsets.
 
 ---
 
